@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import entity.Boiler;
 
 @Repository
-public class JdbcBoilerRepository implements boilerRepository {
+public class JdbcBoilerRepository implements BoilerRepository {
 
 	private JdbcOperations jdbcOperations;
 
