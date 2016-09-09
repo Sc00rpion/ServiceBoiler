@@ -1,9 +1,9 @@
 package database;
 
+import org.springframework.data.repository.CrudRepository;
+
 import entity.Boiler;
 
-public interface BoilerRepository {
-	void addBoiler(Boiler boiler);
-	void updateBoiler(Boiler boiler);
-	Boiler findById(Long id);
+public interface BoilerRepository extends CrudRepository<Boiler, Long> {
+
 }

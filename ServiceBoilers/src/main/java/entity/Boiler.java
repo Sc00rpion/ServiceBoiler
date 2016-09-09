@@ -2,16 +2,32 @@ package entity;
 
 import java.sql.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Boiler {
-	private final Long id;
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	private String name;
 	private Date launchDate;
 	
-	public Boiler(String name, Date launchDate){
-		this(null, name, launchDate);
+	public Boiler(){
 	}
 	
-	public Boiler(Long id, String name, Date launchDate){
+	public Boiler(String name, Date launchDate){
+		this.name = name;
+		this.launchDate = launchDate;
+	}
+	
+	public Boiler(long id, String name, Date launchDate){
 		this.id = id;
 		this.name = name;
 		this.launchDate = launchDate;
