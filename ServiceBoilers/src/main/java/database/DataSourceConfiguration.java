@@ -11,6 +11,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 @Configuration
 @ComponentScan
 @PropertySource("classpath:/database/database.properties")
@@ -27,9 +30,9 @@ public class DataSourceConfiguration {
 	// .addScript("classpath:test-data.sql").build();
 	// }
 
-	// @Profile("qa")
+
 	@Bean
-	public DataSource dataSource() {
+	public DataSource dataSourcee() {
 		String url = env.getProperty("mysql.url");
 		String username = env.getProperty("mysql.username");
 		String password = env.getProperty("mysql.password");
@@ -42,6 +45,23 @@ public class DataSourceConfiguration {
 		ds.setPassword(password);
 		return ds;
 	}
+	
+//	------ Probably faster ------
+	
+    @Bean(destroyMethod = "close")
+    DataSource dataSource(Environment env) {
+		String url = env.getProperty("mysql.url");
+		String username = env.getProperty("mysql.username");
+		String password = env.getProperty("mysql.password");
+		
+        HikariConfig dataSourceConfig = new HikariConfig();
+        dataSourceConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSourceConfig.setJdbcUrl("jdbc:mysql://" + url + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
+        dataSourceConfig.setUsername(username);
+        dataSourceConfig.setPassword(password);
+ 
+        return new HikariDataSource(dataSourceConfig);
+    }
 
 	@Bean
 	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
