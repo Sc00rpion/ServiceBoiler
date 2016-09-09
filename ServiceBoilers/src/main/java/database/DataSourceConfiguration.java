@@ -8,8 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -31,40 +29,16 @@ public class DataSourceConfiguration {
 	// }
 
 
-	@Bean
-	public DataSource dataSourcee() {
-		String url = env.getProperty("mysql.url");
-		String username = env.getProperty("mysql.username");
-		String password = env.getProperty("mysql.password");
-		
-		SingleConnectionDataSource ds = new SingleConnectionDataSource();
-		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		ds.setUrl(
-				"jdbc:mysql://" + url + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
-		ds.setUsername(username);
-		ds.setPassword(password);
-		return ds;
-	}
-	
-//	------ Probably faster ------
+//	------ Probably the fastest ------
 	
     @Bean(destroyMethod = "close")
     DataSource dataSource(Environment env) {
-		String url = env.getProperty("mysql.url");
-		String username = env.getProperty("mysql.username");
-		String password = env.getProperty("mysql.password");
-		
         HikariConfig dataSourceConfig = new HikariConfig();
-        dataSourceConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSourceConfig.setJdbcUrl("jdbc:mysql://" + url + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
-        dataSourceConfig.setUsername(username);
-        dataSourceConfig.setPassword(password);
+        dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
+        dataSourceConfig.setJdbcUrl(env.getRequiredProperty("db.url"));
+        dataSourceConfig.setUsername(env.getRequiredProperty("db.username"));
+        dataSourceConfig.setPassword(env.getRequiredProperty("db.password"));
  
         return new HikariDataSource(dataSourceConfig);
     }
-
-	@Bean
-	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-		return new JdbcTemplate(dataSource);
-	}
 }
