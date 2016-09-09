@@ -13,7 +13,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@ComponentScan
+@ComponentScan(basePackages = {"database", "entity"})
 @PropertySource("classpath:/database/database.properties")
 public class DataSourceConfiguration {
 
